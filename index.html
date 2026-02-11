@@ -1,0 +1,261 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Be My Valentine???</title>
+
+    <style>
+        body {
+            margin: 0;
+            height: 100vh;
+            background: linear-gradient(135deg, #ffb6c1, #ffe4e1);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-family: 'Segoe UI', sans-serif;
+            overflow: hidden;
+        }
+
+        /* floating hearts */
+        .heart {
+            position: absolute;
+            color: rgba(255, 0, 80, 0.4);
+            font-size: 20px;
+            animation: float 6s linear infinite;
+        }
+
+        @keyframes float {
+            0% {
+                transform: translateY(100vh);
+                opacity: 0;
+            }
+
+            20% {
+                opacity: 1;
+            }
+
+            100% {
+                transform: translateY(-10vh);
+                opacity: 0;
+            }
+        }
+
+        .envelope {
+            position: relative;
+            width: 400px;
+            height: 270px;
+            background: #f4b6c2;
+            cursor: pointer;
+            transition: transform 0.4s;
+            overflow: hidden;
+            border-radius: 5px;
+        }
+
+        .envelope:hover {
+            transform: scale(1.03);
+        }
+
+        /* flap */
+        .flap {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 0;
+            height: 0;
+            border-left: 200px solid transparent;
+            border-right: 200px solid transparent;
+            border-top: 150px solid #e89cae;
+            transform-origin: top;
+            transition: transform 0.7s;
+            z-index: 3;
+        }
+
+        .envelope.open .flap {
+            transform: rotateX(180deg);
+        }
+
+        /* letter */
+        .letter {
+            position: absolute;
+            bottom: 8px;
+            left: 15px;
+            width: 370px;
+            height: 250px;
+            background: #fff;
+            padding: 25px;
+            font-size: 16px;
+            box-sizing: border-box;
+            text-align: center;
+            transform: translateY(100%);
+            opacity: 0;
+            pointer-events: none;
+            transition: transform 0.6s, opacity 0.4s;
+            z-index: 2;
+            border-radius: 8px;
+        }
+
+        .envelope.open .letter {
+            transform: translateY(0);
+            opacity: 1;
+            pointer-events: auto;
+        }
+
+        .letter h2 {
+            margin-top: 0;
+            color: #e75480;
+        }
+
+        .letter p {
+            font-size: 15px;
+            color: #444;
+        }
+
+        .buttons {
+            margin-top: 18px;
+            display: flex;
+            justify-content: space-around;
+        }
+
+        button {
+            padding: 10px 18px;
+            border: none;
+            border-radius: 20px;
+            font-size: 14px;
+            cursor: pointer;
+            background: #e75480;
+            color: white;
+            transition: transform 0.2s;
+        }
+
+        button:hover {
+            transform: scale(1.1);
+        }
+
+        #noBtn {
+            background: #aaa;
+        }
+
+        .love-message {
+            position: absolute;
+            top: 50%;
+            /* left: 50%; */
+            transform: translateY(-50%);
+            font-size: 45px;
+            color: #e75480;
+            text-align: center;
+            display: none;
+            animation: pop 0.6s ease;
+        }
+
+        .love-message img {
+            width: 300px;
+            margin-top: 30px;
+            /* animation: spin 1.2s linear; */
+        }
+
+        .spin {
+            animation: spin 1.2s linear infinite;
+        }
+
+        @keyframes spin {
+            from {
+                transform: rotate(0deg);
+            }
+
+            to {
+                transform: rotate(360deg);
+            }
+        }
+
+        @keyframes pop {
+            0% {
+                transform: scale(0.5);
+                opacity: 0;
+            }
+
+            100% {
+                transform: scale(1);
+                opacity: 1;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="envelope" onclick="openEnvelope()">
+        <div class="flap"></div>
+
+        <div class="letter">
+            <h2>💌 Happy Valentine’s 💌</h2>
+            <p>
+                I was wondering…<br><br>
+                Will you be my Valentine? 💖
+            </p>
+
+            <div class="buttons">
+                <button onclick="event.stopPropagation(); sayYes()">Yes 💕</button>
+                <button id="noBtn" onmouseenter="moveNo()">No 😅</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="love-message" id="loveMsg">
+        <p>YIPPIE!!!</p>
+        <img src="./cornbreadReagan.png" id="loveImg" />
+    </div>
+
+    <script>
+        function openEnvelope() {
+            document.querySelector('.envelope').classList.add('open');
+        }
+
+        function sayYes() {
+            document.querySelector('.envelope').style.display = 'none';
+            // show love message
+            const loveMsg = document.getElementById('loveMsg');
+            loveMsg.style.display = 'block';
+
+            // get the image
+            const img = document.getElementById('loveImg');
+
+            // start spinning
+            img.classList.add('spin');
+
+            // stop spinning after 3 seconds
+            setTimeout(() => {
+                img.classList.remove('spin');
+            }, 3000);
+            //document.getElementById('loveMsg').style.display = 'block';
+        }
+
+        function moveNo() {
+            const btn = document.getElementById('noBtn');
+            const letter = document.querySelector('.letter');
+
+            btn.style.position = 'absolute';
+
+            const maxX = letter.clientWidth - btn.offsetWidth;
+            const maxY = letter.clientHeight - btn.offsetHeight;
+
+            btn.style.left = Math.random() * maxX + 'px';
+            btn.style.top = Math.random() * maxY + 'px';
+        }
+
+        // floating hearts generator
+        setInterval(() => {
+            const heart = document.createElement('div');
+            heart.className = 'heart';
+            heart.innerHTML = '❤️';
+            heart.style.left = Math.random() * 100 + 'vw';
+            heart.style.fontSize = Math.random() * 20 + 10 + 'px';
+            document.body.appendChild(heart);
+
+            setTimeout(() => heart.remove(), 6000);
+        }, 400);
+    </script>
+
+</body>
+
+</html>
